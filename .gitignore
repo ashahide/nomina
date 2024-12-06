@@ -10,3 +10,5 @@ dist/
 # Ignore any __pycache__
 __pycache__/
 
+# Ignore any build info in src/
+src/*.egg-info/
