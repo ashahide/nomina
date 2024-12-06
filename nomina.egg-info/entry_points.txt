@@ -1,0 +1,2 @@
+[console_scripts]
+nomina = src.main:main

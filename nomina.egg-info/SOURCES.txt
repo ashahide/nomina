@@ -1,0 +1,10 @@
+LICENSE
+pyproject.toml
+setup.py
+nomina.egg-info/PKG-INFO
+nomina.egg-info/SOURCES.txt
+nomina.egg-info/dependency_links.txt
+nomina.egg-info/entry_points.txt
+nomina.egg-info/top_level.txt
+src/__init__.py
+src/main.py
