@@ -1,0 +1,12 @@
+# Ingore any build
+build/
+
+# Ignore any dist
+dist/
+
+# Ignore any egg-info
+*.egg-info/
+
+# Ignore any __pycache__
+__pycache__/
+
