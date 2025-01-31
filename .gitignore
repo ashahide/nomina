@@ -10,5 +10,15 @@ dist/
 # Ignore any __pycache__
 __pycache__/
 
+# Ignore pycache in any directory
+**/__pycache__/
+
+# Ignore myvenv
+myvenv/
+
+# Ignore venv in any subdirectorydirectory
+**/venv/
+
+
 # Ignore any build info in src/
 src/*.egg-info/
