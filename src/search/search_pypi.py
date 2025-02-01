@@ -1,3 +1,7 @@
+import search.search_pypi
+import formatting.search_output
+
+
 import requests
 import re
 
@@ -50,3 +54,29 @@ def check_pypi_package(package_name):
         
         case _:
             return False, 'Unknown error', normalized_name
+        
+
+
+def main(args):
+
+    package_names = []
+    package_normalized_names = []
+    package_status = []
+    package_messages = []
+
+    search_dict = {}
+
+    for name in args.name:
+
+        status, message, normalized_name = search.search_pypi.check_pypi_package(name)
+
+        package_names.append(name)
+        package_normalized_names.append(normalized_name)
+        package_status.append(status)
+        package_messages.append(message)
+
+        search_dict[name] = {"Status": status, "Message": message, "Normalized Name": normalized_name}
+        
+    table = formatting.search_output.create_pypi_output_table(package_names, package_normalized_names, package_status, package_messages)
+
+    return table, search_dict

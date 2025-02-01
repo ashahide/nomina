@@ -1,6 +1,6 @@
 import tabulate
 
-def format_pypi_output(package_name, normalized_name, status, message):
+def create_pypi_output_table(package_name, normalized_name, status, message):
 
     assert isinstance(package_name, list), "package_name must be a list"
     assert isinstance(normalized_name, list), "normalized_name must be a list"
