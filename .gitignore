@@ -18,3 +18,7 @@ nomina-venv/
 
 # Ignore any build info in src/
 src/*.egg-info/
+
+# Ignore .vscode in any directory
+.vscode/
+
