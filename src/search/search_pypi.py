@@ -1,5 +1,4 @@
-import search.search_pypi
-import formatting.search_output
+import src.formatting.search_output
 
 
 import requests
@@ -68,7 +67,7 @@ def main(args):
 
     for name in args.name:
 
-        status, message, normalized_name = search.search_pypi.check_pypi_package(name)
+        status, message, normalized_name = check_pypi_package(name)
 
         package_names.append(name)
         package_normalized_names.append(normalized_name)
