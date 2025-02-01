@@ -12,13 +12,13 @@ nomina is a package designed to help users create relevant and context-specific 
 Run the following command to get information about how to use the command line tool
 
 ```python3
-python3 -m src/nomina/main -h
+python3 -m src.nomina.main -h
 ```
 
 To search PyPI for "pandas" and "numpy", the following command
 
 ```python3
-python3 -m src/nomina/main pandas numpy
+python3 -m src.nomina.main pandas numpy
 ```
 
 which will generate a table showing the results for pandas and numpy.
