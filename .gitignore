@@ -13,12 +13,12 @@ __pycache__/
 # Ignore pycache in any directory
 **/__pycache__/
 
-# Ignore myvenv
-myvenv/
-
-# Ignore venv in any subdirectorydirectory
-**/venv/
-
+# Ignore nomina-venv
+nomina-venv/
 
 # Ignore any build info in src/
 src/*.egg-info/
+
+# Ignore .vscode in any directory
+.vscode/
+

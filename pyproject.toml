@@ -2,16 +2,13 @@
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
-[project.scripts]
-nomina = 'src.main:main'
-
-
 [project]
 name = "nomina"
 version = "0.0.1"
 authors = [
   { name="Andy Shahidehpour", email="anshahidehpour@gmail.com" },
 ]
+
 description = "A package for generating Python package names."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -20,3 +17,15 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+
+[tool.setuptools]
+packages = ["nomina"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[project.scripts]
+nomina = "nomina.nomina_cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
