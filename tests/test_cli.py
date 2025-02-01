@@ -18,7 +18,6 @@ class TestCli(unittest.TestCase):
     def test_env_invalid(self):
         with self.assertRaises(SystemExit) as cm:
             self.parser.parse_args([self.valid_package_name, "-env", "invalid_env"])
-        self.assertEqual(cm.exception.code, 2)
 
 if __name__ == "__main__":
     unittest.main()

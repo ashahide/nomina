@@ -1,11 +1,10 @@
-import sys
-
 from .cli import make_parser
 from .search import search_pypi
-parser = make_parser.make_parser()
 
 
-if __name__ == "__main__":
+def main():
+    
+    parser = make_parser.make_parser()
 
     args = parser.parse_args()
 

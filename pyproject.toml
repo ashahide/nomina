@@ -8,6 +8,7 @@ version = "0.0.1"
 authors = [
   { name="Andy Shahidehpour", email="anshahidehpour@gmail.com" },
 ]
+
 description = "A package for generating Python package names."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -22,6 +23,9 @@ packages = ["nomina"]
 
 [tool.setuptools.package-dir]
 "" = "src"
+
+[project.scripts]
+nomina = "nomina.nomina_cli:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
