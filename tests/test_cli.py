@@ -1,5 +1,5 @@
 import unittest
-from src.cli.make_parser import make_parser
+from src.nomina.cli.make_parser import make_parser
 
 class TestCli(unittest.TestCase):
 
