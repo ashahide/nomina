@@ -14,15 +14,23 @@ if __name__ == "__main__":
     package_status = []
     package_messages = []
 
-    for name in args.name:
+    match args.environment:
 
-        status, message, normalized_name = search.search_pypi.check_pypi_package(name)
+        case "pypi":
 
-        package_names.append(name)
-        package_normalized_names.append(normalized_name)
-        package_status.append(status)
-        package_messages.append(message)
+            for name in args.name:
 
-    table = formatting.search_output.format_pypi_output(package_names, package_normalized_names, package_status, package_messages)
+                status, message, normalized_name = search.search_pypi.check_pypi_package(name)
 
-    print(table)
+                package_names.append(name)
+                package_normalized_names.append(normalized_name)
+                package_status.append(status)
+                package_messages.append(message)
+
+            table = formatting.search_output.format_pypi_output(package_names, package_normalized_names, package_status, package_messages)
+
+            print(table)
+
+        case _:
+            print(f"Environment {args.environment} not supported.")
+    
