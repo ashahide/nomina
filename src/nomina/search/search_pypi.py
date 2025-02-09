@@ -30,7 +30,7 @@ def normalize_package_name_pypi_rules(package_name: str):
             normalized_name,
         )
     else:
-        return False, "Invalid package name", normalized_name
+        return False, "Invalid package name", None
 
 
 def search_for_pypi_package(package_name: str):
