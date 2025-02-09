@@ -90,10 +90,18 @@ class PyPiPackage(PackageABC):
             search_for_pypi_package(self.normalized_package_name)
         )
 
+        if self.package_exists:
+            self.official_package_name = self.search_response_object.json()["info"][
+                "name"
+            ]
+        else:
+            self.official_package_name = None
+
     def get_search_results(self):
         return SearchResults(
             environment="pypi",
             user_input_package_name=self.user_package_name_input,
+            official_package_name=self.official_package_name,
             package_exists=self.package_exists,
             normalized_package_name=self.normalized_package_name,
             search_response_object=self.search_response_object,
