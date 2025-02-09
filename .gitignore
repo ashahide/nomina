@@ -22,3 +22,5 @@ src/*.egg-info/
 # Ignore .vscode in any directory
 .vscode/
 
+# ignore .ruff
+.ruff_cache/
