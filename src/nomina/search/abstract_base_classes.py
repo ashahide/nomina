@@ -8,6 +8,7 @@ class SearchResults:
     user_input_package_name: str
     package_exists: bool
     normalized_package_name: str
+    official_package_name: str
     search_response_object: object
     search_response_message: str
 

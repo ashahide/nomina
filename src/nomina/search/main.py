@@ -7,15 +7,13 @@ import tabulate
 
 
 def create_output_table(package_search_results):
-    table = [["Package Name", "Normalized Name", "Status", "Message"]]
+    table = [["Package Name", "Official Name", "Status", "Message"]]
 
     for package in package_search_results:
-        breakpoint()
-
         table.append(
             [
                 package.user_input_package_name,
-                package.normalized_package_name,
+                package.official_package_name,
                 package.package_exists,
                 package.search_response_message,
             ]
