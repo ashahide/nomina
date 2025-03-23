@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 @dataclass
 class SearchResults:
-    environment: str
     user_input_package_name: str
     package_exists: bool
     normalized_package_name: str

@@ -7,11 +7,6 @@ def main():
 
     args = parser.parse_args()
 
-    match args.environment:
-        case "pypi":
-            table = run_package_search(args)
-
-        case _:
-            raise ModuleNotFoundError(f"Environment {args.environment} not found.")
-
+    table = run_package_search(args)
+    
     print(table)

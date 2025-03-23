@@ -1,14 +1,21 @@
 from .search_pypi import PyPiPackage, SearchResults
-
 import tabulate
 
 
-""" Create Table to Display Output """
+def create_output_table(package_search_results: list[SearchResults]) -> str:
+    """
+    Format a list of SearchResults objects into a grid-style table for display.
 
+    Args:
+        package_search_results (list[SearchResults]): A list of search results from different package checks.
 
-def create_output_table(package_search_results):
-    table = [["Package Name", "Official Name", "Status", "Message"]]
+    Returns:
+        str: A string representation of the results in a table format using `tabulate`.
+    """
+    # Initialize table with column headers
+    table = [["Input Name", "Normalized Name", "Status", "Message"]]
 
+    # Populate the table with result rows
     for package in package_search_results:
         table.append(
             [
@@ -19,42 +26,50 @@ def create_output_table(package_search_results):
             ]
         )
 
+    # Generate formatted output table
     return tabulate.tabulate(table, headers="firstrow", tablefmt="grid")
 
 
-""" Main Search Function """
+def run_package_search(args) -> str:
+    """
+    Main entry point for running package name searches and displaying results.
 
+    This function processes a list of package names provided via CLI args, uses
+    a search class to normalize and check availability, and outputs a formatted table.
 
-def run_package_search(args):
-    # List to store the package instances (representing the search results for each package)
+    Args:
+        args: A namespace-like object with a `.name` attribute containing package names.
+
+    Returns:
+        str: A table (as a string) summarizing search results for each package name.
+    """
+    # List to collect structured search results
     package_results = []
 
-    # Define class
-    match args.environment:
-        case "pypi":
-            search_class = PyPiPackage
-        case _:
-            raise Exception(f"Unknown environment: {args.env}")
+    # For now, only PyPI is supported — could be extended to other registries later
+    search_class = PyPiPackage
 
-    # Iterate over each package name provided in the arguments
+    # Iterate over each user-provided package name
     for name in args.name:
-        # Create an instance of the search class for each package name
+        # Create a new search instance for the current name
         package_instance = search_class(name)
 
-        # Normalize name
+        # Normalize the package name according to the registry's rules
         package_instance.normalize_package_name()
 
-        # Search package index
+        # Perform the package search (e.g., API call to PyPI)
         package_instance.search_package_index()
 
-        # Get the results
+        # Retrieve structured results
         package_search_obj = package_instance.get_search_results()
+
+        # Ensure the results conform to the expected format
         assert isinstance(package_search_obj, SearchResults)
 
-        # Append the results to the list
+        # Add results to output list
         package_results.append(package_search_obj)
 
-    # Format the results into a table
+    # Format the final result as a display table
     output_table = create_output_table(package_results)
 
     return output_table

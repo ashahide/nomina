@@ -4,102 +4,146 @@ import requests
 import re
 
 
-def normalize_package_name_pypi_rules(package_name: str):
+def normalize_package_name_pypi_rules(package_name: str) -> tuple[bool, str, str | None]:
     """
-    Normalize the package name according to PyPI naming conventions.
+    Normalize and validate a package name according to PEP 426/508 rules.
+
+    This function checks whether the given package name is valid according to PyPI distribution rules,
+    and returns a normalized version if valid.
 
     Args:
-        package_name (str): The original package name.
+        package_name (str): The original user-provided package name.
 
     Returns:
         tuple:
-            - bool: Whether the package name is valid or not.
-            - str: A message indicating the result.
-            - str: The normalized package name.
+            - bool: Whether the package name is valid for PyPI distribution.
+            - str: A message describing the validation result.
+            - str | None: The normalized package name, or None if the input was invalid.
     """
-    name_match = re.match(r"^[a-zA-Z0-9_.-]+$", package_name)
+    if not package_name:
+        return False, "Package name cannot be empty", None
 
-    normalized_name = re.sub(r"[-_.]+", "-", package_name).lower()
+    # Check maximum length
+    if len(package_name) > 255:
+        return False, "Package name exceeds maximum length of 255 characters", None
 
-    if name_match and normalized_name == package_name:
-        return True, "Valid package name", normalized_name
-    elif name_match and normalized_name != package_name:
-        return (
-            True,
-            f"Valid package name, but normalized to {normalized_name}",
-            normalized_name,
-        )
+    # Check that name contains only valid characters
+    if not re.match(r"^[a-zA-Z0-9_.-]+$", package_name):
+        return False, "Package name contains invalid characters", None
+
+    # Ensure name starts and ends with alphanumeric characters
+    if not (package_name[0].isalnum() and package_name[-1].isalnum()):
+        return False, "Package name must start and end with a letter or digit", None
+
+    # Disallow consecutive separator characters (., -, _)
+    if re.search(r"[-_.]{2,}", package_name):
+        return False, "Package name cannot contain consecutive '.', '-', or '_'", None
+
+    # Normalize by collapsing all separators to a single hyphen and converting to lowercase
+    normalized = re.sub(r"[-_.]+", "-", package_name).lower()
+
+    # Determine if the input matches the normalized form
+    if normalized == package_name:
+        return True, "Valid package name", normalized
     else:
-        return False, "Invalid package name", None
+        return True, f"Valid, but normalized to {normalized}", normalized
 
 
-def search_for_pypi_package(package_name: str):
+def search_for_pypi_package(package_name: str) -> tuple[object, bool, str]:
     """
-    Search for a PyPI package using the normalized name.
+    Query the PyPI registry to check if a package exists.
 
     Args:
-        package_name (str): The original package name.
+        package_name (str): The normalized package name to query.
 
     Returns:
         tuple:
-            - bool: Whether the package exists or not.
-            - str: A message indicating the result of the search.
-            - str: The normalized package name used in the search.
+            - object: The response object from the PyPI server.
+            - bool: Whether the package exists on PyPI.
+            - str: A descriptive message about the result.
     """
     url = f"https://pypi.org/pypi/{package_name}/json"
-
     response_try_counter: int = 0
 
+    # Retry up to 5 times on connection errors
     while response_try_counter < 5:
         try:
             response = requests.get(url)
             break
-        except:
+        except requests.exceptions.RequestException:
             response_try_counter += 1
 
+    # Raise an error if we can't connect after multiple attempts
     if response_try_counter == 5:
         raise Exception(
             f"Unable to connect to PyPI after {response_try_counter} attempts"
         )
 
+    # Interpret HTTP response
     match response.status_code:
         case 404:
-            package_exists: bool = False
-            package_message: str = "Package not found - Status 404"
+            return response, False, "Package not found - Status 404"
         case 200:
-            package_exists: bool = True
-            package_message: str = "Package found - Status 200"
+            return response, True, "Package found - Status 200"
         case _:
-            package_exists: bool = None
-            package_message: str = "Unknown error"
-
-    return response, package_exists, package_message
+            return response, None, f"Unexpected response status: {response.status_code}"
 
 
 class PyPiPackage(PackageABC):
+    """
+    Concrete implementation of PackageABC for Python packages hosted on PyPI.
+
+    This class handles validation, normalization, and search of package names
+    using PyPI's naming conventions and API.
+    """
+
     def __init__(self, package_name: str):
+        """
+        Initialize the PyPiPackage with a user-provided package name.
+
+        Args:
+            package_name (str): The package name to validate and search.
+        """
         super().__init__(package_name)
 
     def normalize_package_name(self):
+        """
+        Normalize the user-provided package name and store the result.
+
+        This sets `self.normalized_package_name`.
+        """
         _, _, self.normalized_package_name = normalize_package_name_pypi_rules(
             self.user_package_name_input
         )
 
     def search_package_index(self):
+        """
+        Search the PyPI index for the normalized package name.
+
+        Sets:
+            - self.search_response_object
+            - self.package_exists
+            - self.search_results (message)
+            - self.official_package_name (if found)
+        """
         self.search_response_object, self.package_exists, self.search_results = (
             search_for_pypi_package(self.normalized_package_name)
         )
 
+        # Extract official name from metadata if package exists
         if self.package_exists:
-            self.official_package_name = self.search_response_object.json()["info"][
-                "name"
-            ]
+            self.official_package_name = self.search_response_object.json()["info"]["name"]
         else:
             self.official_package_name = None
 
-    def get_search_results(self):
+    def get_search_results(self) -> SearchResults:
+        """
+        Compile and return a structured summary of the search results.
+
+        Returns:
+            SearchResults: Dataclass containing search metadata and results.
+        """
         return SearchResults(
-            environment="pypi",
             user_input_package_name=self.user_package_name_input,
             official_package_name=self.official_package_name,
             package_exists=self.package_exists,
