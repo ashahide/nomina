@@ -84,6 +84,30 @@ class TestPypiPackageClass(unittest.TestCase):
             "Package found - Status 200",
         )
 
+class TestNormalizePackageName(unittest.TestCase):
+    def test_valid_name(self):
+        is_valid, msg, normalized = normalize_package_name_pypi_rules("numpy")
+        self.assertTrue(is_valid)
+        self.assertEqual(normalized, "numpy")
+
+    def test_invalid_characters(self):
+        is_valid, msg, normalized = normalize_package_name_pypi_rules("bad@name")
+        self.assertFalse(is_valid)
+        self.assertIn("invalid characters", msg.lower())
+        self.assertIsNone(normalized)
+
+    def test_consecutive_separators(self):
+        is_valid, msg, normalized = normalize_package_name_pypi_rules("paNDa..s")
+        self.assertFalse(is_valid)
+        self.assertIn("consecutive", msg.lower())
+        self.assertIsNone(normalized)
+
+    def test_invalid_start_char(self):
+        is_valid, msg, normalized = normalize_package_name_pypi_rules(".name")
+        self.assertFalse(is_valid)
+        self.assertIn("start and end", msg.lower())
+        self.assertIsNone(normalized)
+
 
 if __name__ == "__main__":
     unittest.main()

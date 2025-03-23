@@ -18,12 +18,12 @@ def create_output_table(package_search_results: list[SearchResults]) -> str:
     # Populate the table with result rows
     for package in package_search_results:
         table.append(
-            [
-                package.user_input_package_name,
-                package.official_package_name,
-                package.package_exists,
-                package.search_response_message,
-            ]
+        [
+            package.user_input_package_name,
+            package.normalized_package_name or "",  # empty string if None
+            package.package_exists,
+            package.search_response_message,
+        ]
         )
 
     # Generate formatted output table

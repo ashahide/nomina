@@ -95,10 +95,10 @@ class PyPiPackage(PackageABC):
 
         This sets `self.normalized_package_name`.
         """
-        _, _, self.normalized_package_name = normalize_package_name_pypi_rules(
+        self.is_valid_name, _, self.normalized_package_name = normalize_package_name_pypi_rules(
             self.user_package_name_input
         )
-
+        
     def search_package_index(self):
         """
         Search the PyPI index for the normalized package name.
@@ -109,6 +109,14 @@ class PyPiPackage(PackageABC):
             - self.search_results (message)
             - self.official_package_name (if found)
         """
+
+        if not self.is_valid_name:
+            self.package_exists = False
+            self.search_results = "Invalid package name - not searched"
+            self.official_package_name = None
+            self.search_response_object = None
+            return
+        
         self.search_response_object, self.package_exists, self.search_results = (
             search_for_pypi_package(self.normalized_package_name)
         )
