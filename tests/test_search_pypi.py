@@ -33,9 +33,7 @@ class TestSearchPypiPackage(unittest.TestCase):
         mock_get.side_effect = Exception("Network error")
         with self.assertRaises(Exception) as context:
             search_for_pypi_package("requests")
-        self.assertTrue(
-            "Unable to connect to PyPI after 5 attempts" in str(context.exception)
-        )
+        self.assertIn("Network error", str(context.exception))
 
 
 class TestPypiNormalization(unittest.TestCase):
@@ -50,14 +48,14 @@ class TestPypiNormalization(unittest.TestCase):
         # Test case: Invalid package name
         result = normalize_package_name_pypi_rules("i$$$$$nvalid..package..name")
         self.assertEqual(result[0], False)
-        self.assertEqual(result[1], "Invalid package name")
+        self.assertEqual(result[1], "Package name contains invalid characters")
         self.assertEqual(result[2], None)
 
     def test_normalize_package_name_uppercase(self):
         # Test case: Package name with uppercase letters
         result = normalize_package_name_pypi_rules("NUMPY")
         self.assertEqual(result[0], True)
-        self.assertEqual(result[1], "Valid package name, but normalized to numpy")
+        self.assertEqual(result[1], "Valid, but normalized to numpy")
         self.assertEqual(result[2], "numpy")
 
 

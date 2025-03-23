@@ -50,36 +50,19 @@ def normalize_package_name_pypi_rules(package_name: str) -> tuple[bool, str, str
 
 
 def search_for_pypi_package(package_name: str) -> tuple[object, bool, str]:
-    """
-    Query the PyPI registry to check if a package exists.
-
-    Args:
-        package_name (str): The normalized package name to query.
-
-    Returns:
-        tuple:
-            - object: The response object from the PyPI server.
-            - bool: Whether the package exists on PyPI.
-            - str: A descriptive message about the result.
-    """
     url = f"https://pypi.org/pypi/{package_name}/json"
     response_try_counter: int = 0
 
-    # Retry up to 5 times on connection errors
     while response_try_counter < 5:
         try:
             response = requests.get(url)
             break
-        except requests.exceptions.RequestException:
+        except requests.exceptions.RequestException as e:
             response_try_counter += 1
 
-    # Raise an error if we can't connect after multiple attempts
     if response_try_counter == 5:
-        raise Exception(
-            f"Unable to connect to PyPI after {response_try_counter} attempts"
-        )
+        raise Exception("Network Error: Unable to connect to PyPI after 5 attempts")
 
-    # Interpret HTTP response
     match response.status_code:
         case 404:
             return response, False, "Package not found - Status 404"
