@@ -27,3 +27,4 @@ src/*.egg-info/
 
 # poetry lock
 poetry.lock
+uv.lock
