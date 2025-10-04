@@ -4,6 +4,8 @@ import pathlib
 import shutil
 import subprocess
 
+VENV_LOC = "venv"
+
 
 def clean():
     print("Cleaning project files")
@@ -22,7 +24,7 @@ def clean():
 
 
 def make_venv():
-    subprocess.run(["uv", "venv"])
+    subprocess.run(["uv", "venv", VENV_LOC])
 
 
 if __name__ == "__main__":
@@ -33,7 +35,7 @@ if __name__ == "__main__":
         "target",
         nargs="*",
         help="command runner target",
-        choices=["clean", "make-venv"],
+        choices=["clean", "make-venv", "start-venv", "build"],
     )
 
     args = parser.parse_args()
@@ -49,6 +51,11 @@ if __name__ == "__main__":
                     print("Making a venv")
                     clean()
                     make_venv()
+
+                case "build":
+                    print("Bulding with poetry")
+                    subprocess.run(["poetry", "build"])
+                    subprocess.run(["poetry", "install"])
 
                 case _:
                     continue
