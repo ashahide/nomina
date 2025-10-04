@@ -24,3 +24,6 @@ src/*.egg-info/
 
 # ignore .ruff
 .ruff_cache/
+
+# poetry lock
+poetry.lock
