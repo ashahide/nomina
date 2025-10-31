@@ -1,5 +1,5 @@
-from src.nomina.cli.make_parser import make_parser
-from src.nomina.search.main import run_package_search
+from .cli.make_parser import make_parser
+from .search.main import run_package_search
 
 
 def run():
