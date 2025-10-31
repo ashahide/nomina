@@ -1,5 +1,5 @@
-from nomina.cli import make_parser
-from nomina.search.main import run_package_search
+from cli import make_parser
+from search.search_pypi import run_package_search
 
 
 def main():
