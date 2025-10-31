@@ -1,10 +1,12 @@
-from ..search.abstract_base_classes import PackageABC, SearchResults
+from .abstract_base_classes import PackageABC, SearchResults
 
 import requests
 import re
 
 
-def normalize_package_name_pypi_rules(package_name: str) -> tuple[bool, str, str | None]:
+def normalize_package_name_pypi_rules(
+    package_name: str,
+) -> tuple[bool, str, str | None]:
     """
     Normalize and validate a package name according to PEP 426/508 rules.
 
@@ -95,10 +97,10 @@ class PyPiPackage(PackageABC):
 
         This sets `self.normalized_package_name`.
         """
-        self.is_valid_name, _, self.normalized_package_name = normalize_package_name_pypi_rules(
-            self.user_package_name_input
+        self.is_valid_name, _, self.normalized_package_name = (
+            normalize_package_name_pypi_rules(self.user_package_name_input)
         )
-        
+
     def search_package_index(self):
         """
         Search the PyPI index for the normalized package name.
@@ -116,14 +118,16 @@ class PyPiPackage(PackageABC):
             self.official_package_name = None
             self.search_response_object = None
             return
-        
+
         self.search_response_object, self.package_exists, self.search_results = (
             search_for_pypi_package(self.normalized_package_name)
         )
 
         # Extract official name from metadata if package exists
         if self.package_exists:
-            self.official_package_name = self.search_response_object.json()["info"]["name"]
+            self.official_package_name = self.search_response_object.json()["info"][
+                "name"
+            ]
         else:
             self.official_package_name = None
 
