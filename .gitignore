@@ -25,6 +25,9 @@ src/*.egg-info/
 # ignore .ruff
 .ruff_cache/
 
+# Skip the logs
+/logs/*
+
 # poetry lock
 poetry.lock
 uv.lock

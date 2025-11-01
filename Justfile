@@ -50,6 +50,9 @@ run-local *names:
 run-global *names:
     nomina {{names}}
 
+tests:
+    pytest > logs/just.log
+
 # utilities
 
 # Default option without flags. Same as just help
