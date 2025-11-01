@@ -10,18 +10,32 @@ set shell := ["bash", "-cu"]
 install-local:
     poetry install
 
+# Install globally with pipx
+install-global:
+    pipx install . --force
+
+# Run total installation
+install: install-local update-local
+
 # Update local version with poetry
 update-local:
     poetry update
 
 # Build local version with poetry
-build-local:
+build:
     poetry build
 
-# Install globally with pipx
-install-global:
-    pipx install . --force
+# Clean and uninstall global environment
+clean-global:
+    pipx uninstall nomina
 
+# Clean local environment
+clean-local:
+    uv pip uninstall nomina
+    rm -f .venv/bin/nomina
+
+# Total clean (local and global)
+clean: clean-local clean-global
 
 
 #--------------------------------------------
@@ -32,6 +46,7 @@ install-global:
 run-local *names:
     poetry run nomina {{names}}
 
+# Run globaly if it's installed
 run-global *names:
     nomina {{names}}
 
