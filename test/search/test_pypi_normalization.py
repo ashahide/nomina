@@ -31,6 +31,27 @@ def data_package_name_longer_than_255_characters():
 """
 
 
+def test_working_package_names():
+
+    names = [
+        "numpy",
+        "pandas",
+        "matplotlib",
+        "seaborn",
+        "fastapi",
+        "dask",
+        "requests",
+        "pytest",
+    ]
+
+    conditions = []
+
+    for name in names:
+        conditions.append(normalize_package_name_pypi_rules(name)[0])
+
+    assert all(conditions)
+
+
 def test_package_name_is_false(data_package_name_is_false):
 
     assert data_package_name_is_false == (False, "Package name cannot be empty", None)
