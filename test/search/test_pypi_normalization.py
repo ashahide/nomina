@@ -36,6 +36,16 @@ def data_package_has_invalid_chars():
     yield results
 
 
+@pytest.fixture
+def data_package_has_consecutive_separators():
+
+    name = "pandas..numpy---a"
+
+    results = normalize_package_name_pypi_rules(package_name=name)
+
+    yield results
+
+
 """
     Individual tests
 """
@@ -80,5 +90,14 @@ def test_name_valid_chars(data_package_has_invalid_chars):
     assert data_package_has_invalid_chars == (
         False,
         "Package name contains invalid characters",
+        None,
+    )
+
+
+def test_consecutive_separators(data_package_has_consecutive_separators):
+
+    assert data_package_has_consecutive_separators == (
+        False,
+        "Package name cannot contain consecutive '.', '-', or '_'",
         None,
     )
