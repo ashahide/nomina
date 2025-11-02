@@ -46,6 +46,26 @@ def data_package_has_consecutive_separators():
     yield results
 
 
+@pytest.fixture
+def data_package_start_alphanumeric():
+
+    name = "..numpy---a"
+
+    results = normalize_package_name_pypi_rules(package_name=name)
+
+    yield results
+
+
+@pytest.fixture
+def data_package_end_alphanumeric():
+
+    name = "..numpy---a"
+
+    results = normalize_package_name_pypi_rules(package_name=name)
+
+    yield results
+
+
 """
     Individual tests
 """
@@ -100,4 +120,15 @@ def test_consecutive_separators(data_package_has_consecutive_separators):
         False,
         "Package name cannot contain consecutive '.', '-', or '_'",
         None,
+    )
+
+
+def test_starting_ending_alphanumeric(
+    data_package_start_alphanumeric, data_package_end_alphanumeric
+):
+
+    assert (
+        data_package_end_alphanumeric
+        == data_package_start_alphanumeric
+        == (False, "Package name must start and end with a letter or digit", None)
     )
