@@ -1,4 +1,4 @@
-from .cli.make_parser import make_parser
+from .make_parser import make_parser
 from .search.main import run_package_search
 
 

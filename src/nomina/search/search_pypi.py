@@ -141,7 +141,9 @@ class PyPiPackage(PackageABC):
         """
         return SearchResults(
             user_input_package_name=self.user_package_name_input,
-            official_package_name=self.official_package_name,
+            official_package_name=self.official_package_name
+            if self.official_package_name
+            else "",
             package_exists=self.package_exists,
             normalized_package_name=self.normalized_package_name,
             search_response_object=self.search_response_object,
