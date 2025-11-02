@@ -1,0 +1,45 @@
+import pytest
+from dataclasses import dataclass
+
+from nomina.search.search_pypi import normalize_package_name_pypi_rules
+
+"""
+    Define fixtures
+"""
+
+
+@pytest.fixture
+def data_package_name_is_false():
+
+    results = normalize_package_name_pypi_rules(package_name=None)
+
+    yield results
+
+
+@pytest.fixture
+def data_package_name_longer_than_255_characters():
+
+    name = "haha" * 255
+
+    results = normalize_package_name_pypi_rules(package_name=name)
+
+    yield results
+
+
+"""
+    Individual tests
+"""
+
+
+def test_package_name_is_false(data_package_name_is_false):
+
+    assert data_package_name_is_false == (False, "Package name cannot be empty", None)
+
+
+def test_name_length_less_than_255(data_package_name_longer_than_255_characters):
+
+    assert data_package_name_longer_than_255_characters == (
+        False,
+        "Package name exceeds maximum length of 255 characters",
+        None,
+    )
