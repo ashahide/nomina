@@ -1,4 +1,5 @@
-from .abstract_base_classes import PackageABC, SearchResults
+from .schema.abstract_base_classes import PackageABC
+from .schema.schema import SearchResults
 
 import requests
 import re

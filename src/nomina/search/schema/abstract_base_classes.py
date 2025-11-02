@@ -1,18 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
-
-
-@dataclass
-class SearchResults:
-    """
-    Data container for storing results of a package name search.
-    """
-    user_input_package_name: str         # The original package name provided by the user
-    package_exists: bool                 # True if the package exists in the registry, False otherwise
-    normalized_package_name: str         # The registry-normalized version of the input name
-    official_package_name: str           # The official name of the package from the registry metadata (if it exists)
-    search_response_object: object       # The raw response object from the registry API (e.g., requests.Response)
-    search_response_message: str         # A human-readable message describing the outcome of the search
+from .schema import SearchResults
 
 
 class PackageABC(ABC):
@@ -44,7 +31,7 @@ class PackageABC(ABC):
     def search_package_index(self):
         """
         Perform the search against the target package index (e.g., PyPI, crates.io).
-        This should set relevant instance attributes like `self.package_exists`, 
+        This should set relevant instance attributes like `self.package_exists`,
         `self.official_package_name`, `self.search_results`, and `self.search_response_object`.
         """
         pass
@@ -53,7 +40,7 @@ class PackageABC(ABC):
     def get_search_results(self) -> SearchResults:
         """
         Return a structured SearchResults object summarizing the search outcome.
-        
+
         Returns:
             SearchResults: The collected data about the search result.
         """

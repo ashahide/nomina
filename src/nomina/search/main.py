@@ -1,4 +1,5 @@
-from .search_pypi import PyPiPackage, SearchResults
+from .search_pypi import PyPiPackage
+from .schema.schema import SearchResults
 import tabulate
 
 
