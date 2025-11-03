@@ -1,6 +1,26 @@
 import pydantic
 
 
+class NormalizedReturnMessage(pydantic.BaseModel):
+    valid: bool
+    message: str
+
+
+class NormalizedPackage(pydantic.BaseModel):
+    """
+    Data structure for holding normalized package
+    """
+
+    # User input name
+    input_name: str
+
+    # Normalized name
+    normalized_name: str
+
+    # Note about normalization results
+    message: NormalizedReturnMessage
+
+
 class SearchResults(pydantic.BaseModel):
     """
     Data structure for storing results of a package name search.
